@@ -1,6 +1,13 @@
 plugins {
     id 'java'
     id 'pmd'
+    id 'application'
+}
+
+application {
+    //mainClassName = 'org.miasta.k2'
+    //mainClassName = 'Controller'
+    mainClassName = 'hello.HelloWorld'
 }
 
 version '1.0-SNAPSHOT'
