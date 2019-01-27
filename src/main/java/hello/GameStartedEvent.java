@@ -1,3 +1,5 @@
+package hello;
+
 public class GameStartedEvent {
 
     private final String id;

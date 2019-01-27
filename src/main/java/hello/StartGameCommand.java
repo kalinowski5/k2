@@ -1,3 +1,5 @@
+package hello;
+
 public class StartGameCommand
 {
     private final String id;
