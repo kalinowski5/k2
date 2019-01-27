@@ -2,6 +2,8 @@ plugins {
     id 'java'
     id 'pmd'
     id 'application'
+    id "org.springframework.boot" version "2.1.2.RELEASE"
+    id "io.spring.dependency-management" version "1.0.6.RELEASE"
 }
 
 application {
@@ -18,7 +20,9 @@ repositories {
     mavenCentral()
 }
 
+
 dependencies {
+    compile("org.springframework.boot:spring-boot-starter-web")
     compile group: 'org.axonframework', name: 'axon-core', version: '3.3.7'
     compile "joda-time:joda-time:2.10"
     testCompile group: 'junit', name: 'junit', version: '4.12'
