@@ -1,10 +1,10 @@
-package hello;
+package k2;
 
-public class BoardSetUpEvent {
-
+public class SetupBoardCommand
+{
     private final String id;
 
-    public BoardSetUpEvent(String id) {
+    public SetupBoardCommand(String id) {
         this.id = id;
     }
 

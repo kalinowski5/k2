@@ -1,4 +1,4 @@
-package hello;
+package k2;
 
 public class Greeter {
     public String sayHello() {

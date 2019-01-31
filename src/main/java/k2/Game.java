@@ -1,4 +1,4 @@
-package hello;
+package k2;
 
 import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.commandhandling.model.AggregateIdentifier;
