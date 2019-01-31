@@ -2,6 +2,7 @@ package k2.controller;
 
 import k2.command.AddPlayerCommand;
 import k2.command.SetupBoardCommand;
+import k2.valueobject.GameId;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.joda.time.LocalTime;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,11 +23,11 @@ public class HelloController {
         LocalTime currentTime = new LocalTime();
 
         try {
-            String gameId = "game_" + UUID.randomUUID().toString();
+            GameId gameId = new GameId("game_" + UUID.randomUUID().toString());
             commandGateway.sendAndWait(new SetupBoardCommand(gameId));
             commandGateway.sendAndWait(new AddPlayerCommand(gameId,"Michał", "red"));
             commandGateway.sendAndWait(new AddPlayerCommand(gameId,"Andrew", "green"));
-            commandGateway.sendAndWait(new AddPlayerCommand(gameId,"Bob", "blue"));
+            //commandGateway.sendAndWait(new AddPlayerCommand(gameId,"Bob", "blue"));
         } catch (Exception e) {
             return "<h1>Error</h1>" + e.getClass() + " " + e.getMessage();
         }

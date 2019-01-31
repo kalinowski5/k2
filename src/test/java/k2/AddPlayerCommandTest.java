@@ -5,6 +5,7 @@ import k2.command.AddPlayerCommand;
 import k2.event.BoardSetUpEvent;
 import k2.event.PlayerAddedEvent;
 import k2.exception.TooManyPlayersException;
+import k2.valueobject.GameId;
 import org.axonframework.test.aggregate.AggregateTestFixture;
 import org.axonframework.test.aggregate.FixtureConfiguration;
 import org.junit.Before;
@@ -20,20 +21,22 @@ public class AddPlayerCommandTest {
 
     @Test
     public void addPlayer() {
-        fixture.given(new BoardSetUpEvent("GAME_ID"))
-                .when(new AddPlayerCommand("GAME_ID", "John", "red"))
+        GameId gameId = new GameId("GAME_1");
+        fixture.given(new BoardSetUpEvent(gameId))
+                .when(new AddPlayerCommand(gameId, "John", "red"))
                 .expectSuccessfulHandlerExecution()
-                .expectEvents(new PlayerAddedEvent("GAME_ID","John", "red"));
+                .expectEvents(new PlayerAddedEvent(gameId,"John", "red"));
     }
 
     @Test
     public void tooManyPlayers() {
+        GameId gameId = new GameId("GAME_2");
         fixture.given(
-                    new BoardSetUpEvent("GAME_ID"),
-                    new PlayerAddedEvent("GAME_ID", "John", "red"),
-                    new PlayerAddedEvent("GAME_ID", "Kate", "blue")
+                    new BoardSetUpEvent(gameId),
+                    new PlayerAddedEvent(gameId, "John", "red"),
+                    new PlayerAddedEvent(gameId, "Kate", "blue")
                 )
-                .when(new AddPlayerCommand("GAME_ID", "James", "green"))
+                .when(new AddPlayerCommand(gameId, "James", "green"))
                 .expectException(TooManyPlayersException.class);
     }
 }

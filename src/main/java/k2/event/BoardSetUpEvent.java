@@ -1,14 +1,16 @@
 package k2.event;
 
+import k2.valueobject.GameId;
+
 public class BoardSetUpEvent {
 
-    private final String id;
+    private final GameId id;
 
-    public BoardSetUpEvent(String id) {
+    public BoardSetUpEvent(GameId id) {
         this.id = id;
     }
 
-    public String getId() {
+    public GameId getId() {
         return id;
     }
 }

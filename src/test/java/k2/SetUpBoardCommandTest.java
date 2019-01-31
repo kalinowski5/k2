@@ -3,6 +3,7 @@ package k2;
 import k2.aggregate.Game;
 import k2.command.SetupBoardCommand;
 import k2.event.BoardSetUpEvent;
+import k2.valueobject.GameId;
 import org.axonframework.test.aggregate.AggregateTestFixture;
 import org.axonframework.test.aggregate.FixtureConfiguration;
 import org.junit.Before;
@@ -18,9 +19,10 @@ public class SetUpBoardCommandTest {
 
     @Test
     public void setUpGameBoard() {
+        GameId gameId = new GameId("GAME_1");
         fixture.given()
-                .when(new SetupBoardCommand("GAME_ID"))
+                .when(new SetupBoardCommand(gameId))
                 .expectSuccessfulHandlerExecution()
-                .expectEvents(new BoardSetUpEvent("GAME_ID"));
+                .expectEvents(new BoardSetUpEvent(gameId));
     }
 }

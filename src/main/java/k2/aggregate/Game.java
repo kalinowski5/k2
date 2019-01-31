@@ -5,6 +5,7 @@ import k2.command.SetupBoardCommand;
 import k2.event.BoardSetUpEvent;
 import k2.event.PlayerAddedEvent;
 import k2.exception.TooManyPlayersException;
+import k2.valueobject.GameId;
 import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.commandhandling.model.AggregateIdentifier;
 import org.axonframework.commandhandling.model.AggregateLifecycle;
@@ -17,7 +18,7 @@ public class Game {
     private static final int MAX_PLAYERS = 2;
 
     @AggregateIdentifier
-    private String gameId;
+    private GameId gameId;
     private Integer numberOfPlayers = 0;
 
     private Game() {

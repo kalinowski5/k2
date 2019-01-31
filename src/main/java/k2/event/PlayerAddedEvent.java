@@ -1,18 +1,20 @@
 package k2.event;
 
+import k2.valueobject.GameId;
+
 public class PlayerAddedEvent {
 
-    private final String gameId;
+    private final GameId gameId;
     private final String name;
     private final String color;
 
-    public PlayerAddedEvent(String gameId, String name, String color) {
+    public PlayerAddedEvent(GameId gameId, String name, String color) {
         this.gameId = gameId;
         this.name = name;
         this.color = color;
     }
 
-    public String getGameId() {
+    public GameId getGameId() {
         return gameId;
     }
 
