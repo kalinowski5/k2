@@ -2,8 +2,12 @@ package k2.aggregate;
 
 import k2.command.AddPlayerCommand;
 import k2.command.SetupBoardCommand;
+import k2.command.StartGameCommand;
 import k2.event.BoardSetUpEvent;
+import k2.event.GameStartedEvent;
 import k2.event.PlayerAddedEvent;
+import k2.exception.GameAlreadyStartedException;
+import k2.exception.NotEnoughPlayersException;
 import k2.exception.TooManyPlayersException;
 import k2.valueobject.GameId;
 import org.axonframework.commandhandling.CommandHandler;
@@ -20,6 +24,7 @@ public class Game {
     @AggregateIdentifier
     private GameId gameId;
     private Integer numberOfPlayers = 0;
+    private boolean gameStarted = false;
 
     private Game() {
     }
@@ -38,6 +43,20 @@ public class Game {
         AggregateLifecycle.apply(new PlayerAddedEvent(gameId, command.getName(), command.getColor()));
     }
 
+    @CommandHandler
+    public void start(StartGameCommand command) throws NotEnoughPlayersException, GameAlreadyStartedException {
+
+        if (numberOfPlayers < 1) {
+            throw new NotEnoughPlayersException();
+        }
+
+        if (gameStarted) {
+            throw new GameAlreadyStartedException();
+        }
+
+        AggregateLifecycle.apply(new GameStartedEvent(gameId));
+    }
+
     @EventSourcingHandler
     public void on(BoardSetUpEvent event) {
         gameId = event.getId();
@@ -46,5 +65,10 @@ public class Game {
     @EventSourcingHandler
     public void on(PlayerAddedEvent event) {
         numberOfPlayers += 1;
+    }
+
+    @EventSourcingHandler
+    public void on(GameStartedEvent event) {
+        gameStarted = true;
     }
 }

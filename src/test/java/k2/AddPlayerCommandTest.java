@@ -39,4 +39,9 @@ public class AddPlayerCommandTest {
                 .when(new AddPlayerCommand(gameId, "James", "green"))
                 .expectException(TooManyPlayersException.class);
     }
+
+//    @Test
+//    public void sameColorPlayer() {
+//          .expectException(ColorAlreadyUsedException.class);
+//    }
 }
