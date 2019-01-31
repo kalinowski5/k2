@@ -20,9 +20,13 @@ public class HelloController {
         LocalTime currentTime = new LocalTime();
 
         try {
-            commandGateway.sendAndWait(new StartGameCommand("game_" + UUID.randomUUID().toString(), 2));
+            String gameId = "game_" + UUID.randomUUID().toString();
+            commandGateway.sendAndWait(new SetupBoardCommand(gameId));
+            commandGateway.sendAndWait(new AddPlayerCommand(gameId,"Michał", "red"));
+            commandGateway.sendAndWait(new AddPlayerCommand(gameId,"Andrew", "green"));
+            //commandGateway.sendAndWait(new AddPlayerCommand(gameId,"Bob", "blue"));
         } catch (Exception e) {
-            return "<h1>Error</h1>" + e.getMessage();
+            return "<h1>Error</h1>" + e.getClass() + " " + e.getMessage();
         }
         return "<h1>Greetings from Spring Boot!</h1>"  + currentTime;
     }

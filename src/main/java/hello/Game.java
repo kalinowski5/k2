@@ -6,9 +6,11 @@ import org.axonframework.commandhandling.model.AggregateLifecycle;
 import org.axonframework.eventsourcing.EventSourcingHandler;
 import org.axonframework.spring.stereotype.Aggregate;
 
-//@Aggregate(repository = "jhjhj")
 @Aggregate
 public class Game {
+
+    //public static final int maxNumberOfPlayers = 4;
+    private static final int maxNumberOfPlayers = 2;
 
     @AggregateIdentifier
     private String id;
@@ -19,18 +21,28 @@ public class Game {
     }
 
     @CommandHandler
-    public Game(StartGameCommand command) {
+    public Game(SetupBoardCommand command)
+    {
 
-        if(command.getNumberOfPlayers() <= 0) {
-            throw new IllegalArgumentException("Invalid number of players.");
-        }
 
-        AggregateLifecycle.apply(new GameStartedEvent(command.getId(), command.getNumberOfPlayers()));
+        AggregateLifecycle.apply(new BoardSetUpEvent(command.getId()));
+    }
+
+    @CommandHandler
+    public void addPlayer(AddPlayerCommand command)
+    {
+//        if (this.numberOfPlayers >= maxNumberOfPlayers) {
+//            throw new IllegalArgumentException("Too many players.");
+//        }
+        AggregateLifecycle.apply(new PlayerAddedEvent(command.getName(), command.getColor()));
     }
 
     @EventSourcingHandler
-    public void on(GameStartedEvent event) {
+    public void on(BoardSetUpEvent event) {
         id = event.getId();
-        numberOfPlayers = event.getNumberOfPlayers();
+    }
+    @EventSourcingHandler
+    public void on(PlayerAddedEvent event) {
+        //this.numberOfPlayers = this.numberOfPlayers++;
     }
 }
