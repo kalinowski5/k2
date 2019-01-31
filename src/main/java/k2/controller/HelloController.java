@@ -1,5 +1,7 @@
-package k2;
+package k2.controller;
 
+import k2.command.AddPlayerCommand;
+import k2.command.SetupBoardCommand;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.joda.time.LocalTime;
 import org.springframework.beans.factory.annotation.Autowired;

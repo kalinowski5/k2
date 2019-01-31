@@ -1,5 +1,8 @@
 package k2;
 
+import k2.aggregate.Game;
+import k2.command.SetupBoardCommand;
+import k2.event.BoardSetUpEvent;
 import org.axonframework.test.aggregate.AggregateTestFixture;
 import org.axonframework.test.aggregate.FixtureConfiguration;
 import org.junit.Before;

@@ -1,5 +1,9 @@
-package k2;
+package k2.aggregate;
 
+import k2.command.AddPlayerCommand;
+import k2.command.SetupBoardCommand;
+import k2.event.BoardSetUpEvent;
+import k2.event.PlayerAddedEvent;
 import k2.exception.TooManyPlayersException;
 import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.commandhandling.model.AggregateIdentifier;
@@ -26,7 +30,7 @@ public class Game {
     }
 
     @CommandHandler
-    public void addPlayer(AddPlayerCommand command) throws Exception {
+    public void addPlayer(AddPlayerCommand command) throws TooManyPlayersException {
         if (numberOfPlayers + 1 > MAX_PLAYERS) {
             throw new TooManyPlayersException();
         }

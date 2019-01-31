@@ -1,12 +1,15 @@
-package k2;
+package k2.command;
 
-public class PlayerAddedEvent {
+import org.axonframework.commandhandling.TargetAggregateIdentifier;
 
-    private final String gameId;
+public class AddPlayerCommand
+{
+    @TargetAggregateIdentifier
+    private String gameId;
     private final String name;
     private final String color;
 
-    public PlayerAddedEvent(String gameId, String name, String color) {
+    public AddPlayerCommand(String gameId, String name, String color) {
         this.gameId = gameId;
         this.name = name;
         this.color = color;
@@ -15,6 +18,7 @@ public class PlayerAddedEvent {
     public String getGameId() {
         return gameId;
     }
+
 
     public String getName() {
         return name;

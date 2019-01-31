@@ -1,5 +1,7 @@
 package k2;
 
+import k2.command.AddPlayerCommand;
+import k2.command.SetupBoardCommand;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
