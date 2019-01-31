@@ -2,12 +2,18 @@ package k2;
 
 public class PlayerAddedEvent {
 
+    private final String gameId;
     private final String name;
     private final String color;
 
-    public PlayerAddedEvent(String name, String color) {
+    public PlayerAddedEvent(String gameId, String name, String color) {
+        this.gameId = gameId;
         this.name = name;
         this.color = color;
+    }
+
+    public String getGameId() {
+        return gameId;
     }
 
     public String getName() {

@@ -24,7 +24,7 @@ public class HelloController {
             commandGateway.sendAndWait(new SetupBoardCommand(gameId));
             commandGateway.sendAndWait(new AddPlayerCommand(gameId,"Michał", "red"));
             commandGateway.sendAndWait(new AddPlayerCommand(gameId,"Andrew", "green"));
-            //commandGateway.sendAndWait(new AddPlayerCommand(gameId,"Bob", "blue"));
+            commandGateway.sendAndWait(new AddPlayerCommand(gameId,"Bob", "blue"));
         } catch (Exception e) {
             return "<h1>Error</h1>" + e.getClass() + " " + e.getMessage();
         }

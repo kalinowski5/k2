@@ -1,5 +1,6 @@
 package k2;
 
+import k2.exception.TooManyPlayersException;
 import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.commandhandling.model.AggregateIdentifier;
 import org.axonframework.commandhandling.model.AggregateLifecycle;
@@ -9,40 +10,36 @@ import org.axonframework.spring.stereotype.Aggregate;
 @Aggregate
 public class Game {
 
-    //public static final int maxNumberOfPlayers = 4;
-    private static final int maxNumberOfPlayers = 2;
+    private static final int MAX_PLAYERS = 2;
 
     @AggregateIdentifier
-    private String id;
-    private Integer numberOfPlayers;
+    private String gameId;
+    private Integer numberOfPlayers = 0;
 
-    public Game() {
-
+    private Game() {
     }
 
     @CommandHandler
     public Game(SetupBoardCommand command)
     {
-
-
         AggregateLifecycle.apply(new BoardSetUpEvent(command.getId()));
     }
 
     @CommandHandler
-    public void addPlayer(AddPlayerCommand command)
-    {
-//        if (this.numberOfPlayers >= maxNumberOfPlayers) {
-//            throw new IllegalArgumentException("Too many players.");
-//        }
-        AggregateLifecycle.apply(new PlayerAddedEvent(command.getName(), command.getColor()));
+    public void addPlayer(AddPlayerCommand command) throws Exception {
+        if (numberOfPlayers + 1 > MAX_PLAYERS) {
+            throw new TooManyPlayersException();
+        }
+        AggregateLifecycle.apply(new PlayerAddedEvent(gameId, command.getName(), command.getColor()));
     }
 
     @EventSourcingHandler
     public void on(BoardSetUpEvent event) {
-        id = event.getId();
+        gameId = event.getId();
     }
+
     @EventSourcingHandler
     public void on(PlayerAddedEvent event) {
-        //this.numberOfPlayers = this.numberOfPlayers++;
+        numberOfPlayers += 1;
     }
 }
