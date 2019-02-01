@@ -1,15 +1,17 @@
 package k2.event;
 
+import k2.valueobject.CardType;
 import k2.valueobject.GameId;
+import k2.valueobject.PawnColor;
 
 public class CardDrawnEvent {
 
     private final GameId gameId;
-    private final String player;
-    private final String cardType;
+    private final PawnColor player;
+    private final CardType cardType;
     private final Integer points;
 
-    public CardDrawnEvent(GameId gameId, String player, String cardType, Integer points) {
+    public CardDrawnEvent(GameId gameId, PawnColor player, CardType cardType, Integer points) {
         this.gameId = gameId;
         this.player = player;
         this.cardType = cardType;
@@ -20,11 +22,11 @@ public class CardDrawnEvent {
         return gameId;
     }
 
-    public String getPlayer() {
+    public PawnColor getPlayer() {
         return player;
     }
 
-    public String getCardType() {
+    public CardType getCardType() {
         return cardType;
     }
 

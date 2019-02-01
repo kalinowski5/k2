@@ -12,6 +12,7 @@ import k2.exception.GameAlreadyStartedException;
 import k2.exception.GameNotStartedException;
 import k2.exception.NotEnoughPlayersException;
 import k2.exception.TooManyPlayersException;
+import k2.valueobject.CardType;
 import k2.valueobject.GameId;
 import k2.valueobject.PawnColor;
 import org.axonframework.commandhandling.CommandHandler;
@@ -70,12 +71,12 @@ public class Game {
         if (!this.gameStarted) {
             throw new GameNotStartedException();
         }
-        AggregateLifecycle.apply(new CardDrawnEvent(this.gameId, command.getPlayer(), "move", 2));
-        AggregateLifecycle.apply(new CardDrawnEvent(this.gameId, command.getPlayer(), "move", 2));
-        AggregateLifecycle.apply(new CardDrawnEvent(this.gameId, command.getPlayer(), "move", 2));
-        AggregateLifecycle.apply(new CardDrawnEvent(this.gameId, command.getPlayer(), "move", 2));
-        AggregateLifecycle.apply(new CardDrawnEvent(this.gameId, command.getPlayer(), "move", 2));
-        AggregateLifecycle.apply(new CardDrawnEvent(this.gameId, command.getPlayer(), "move", 2));
+        AggregateLifecycle.apply(new CardDrawnEvent(this.gameId, command.getPlayer(), CardType.MOVEMENT, 2));
+        AggregateLifecycle.apply(new CardDrawnEvent(this.gameId, command.getPlayer(), CardType.MOVEMENT, 2));
+        AggregateLifecycle.apply(new CardDrawnEvent(this.gameId, command.getPlayer(), CardType.MOVEMENT, 2));
+        AggregateLifecycle.apply(new CardDrawnEvent(this.gameId, command.getPlayer(), CardType.MOVEMENT, 2));
+        AggregateLifecycle.apply(new CardDrawnEvent(this.gameId, command.getPlayer(), CardType.MOVEMENT, 2));
+        AggregateLifecycle.apply(new CardDrawnEvent(this.gameId, command.getPlayer(), CardType.MOVEMENT, 2));
     }
 
     @EventSourcingHandler

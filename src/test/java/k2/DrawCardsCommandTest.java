@@ -7,6 +7,7 @@ import k2.event.CardDrawnEvent;
 import k2.event.GameStartedEvent;
 import k2.event.PlayerAddedEvent;
 import k2.exception.GameNotStartedException;
+import k2.valueobject.CardType;
 import k2.valueobject.GameId;
 import k2.valueobject.PawnColor;
 import org.axonframework.test.aggregate.AggregateTestFixture;
@@ -31,15 +32,15 @@ public class DrawCardsCommandTest {
                     new PlayerAddedEvent(gameId, "Kate",  PawnColor.BLUE),
                     new GameStartedEvent(gameId)
                 )
-                .when(new DrawCardsCommand(gameId, "Kate"))
+                .when(new DrawCardsCommand(gameId, PawnColor.BLUE))
                 .expectSuccessfulHandlerExecution()
                 .expectEvents(
-                        new CardDrawnEvent(gameId, "Kate", "move", 2),
-                        new CardDrawnEvent(gameId, "Kate", "move", 2),
-                        new CardDrawnEvent(gameId, "Kate", "move", 2),
-                        new CardDrawnEvent(gameId, "Kate", "move", 2),
-                        new CardDrawnEvent(gameId, "Kate", "move", 2),
-                        new CardDrawnEvent(gameId, "Kate", "move", 2)
+                        new CardDrawnEvent(gameId, PawnColor.BLUE, CardType.MOVEMENT, 2),
+                        new CardDrawnEvent(gameId, PawnColor.BLUE, CardType.MOVEMENT, 2),
+                        new CardDrawnEvent(gameId, PawnColor.BLUE, CardType.MOVEMENT, 2),
+                        new CardDrawnEvent(gameId, PawnColor.BLUE, CardType.MOVEMENT, 2),
+                        new CardDrawnEvent(gameId, PawnColor.BLUE, CardType.MOVEMENT, 2),
+                        new CardDrawnEvent(gameId, PawnColor.BLUE, CardType.MOVEMENT, 2)
                 );
     }
 
@@ -50,7 +51,7 @@ public class DrawCardsCommandTest {
             new BoardSetUpEvent(gameId),
             new PlayerAddedEvent(gameId, "John",  PawnColor.RED)
         )
-        .when(new DrawCardsCommand(gameId, "Kate"))
+        .when(new DrawCardsCommand(gameId, PawnColor.RED))
         .expectException(GameNotStartedException.class);
     }
 
