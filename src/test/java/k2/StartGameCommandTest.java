@@ -1,14 +1,12 @@
 package k2;
 
 import k2.aggregate.Game;
-import k2.command.AddPlayerCommand;
 import k2.command.StartGameCommand;
 import k2.event.BoardSetUpEvent;
 import k2.event.GameStartedEvent;
 import k2.event.PlayerAddedEvent;
 import k2.exception.GameAlreadyStartedException;
 import k2.exception.NotEnoughPlayersException;
-import k2.exception.TooManyPlayersException;
 import k2.valueobject.GameId;
 import org.axonframework.test.aggregate.AggregateTestFixture;
 import org.axonframework.test.aggregate.FixtureConfiguration;

@@ -18,6 +18,9 @@ import org.axonframework.commandhandling.model.AggregateLifecycle;
 import org.axonframework.eventsourcing.EventSourcingHandler;
 import org.axonframework.spring.stereotype.Aggregate;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Aggregate
 public class Game {
 
@@ -25,8 +28,9 @@ public class Game {
 
     @AggregateIdentifier
     private GameId gameId;
-    private Integer numberOfPlayers = 0;
+    private Map<String, String> players;
     private boolean gameStarted = false;
+
 
     private Game() {
     }
@@ -39,7 +43,7 @@ public class Game {
 
     @CommandHandler
     public void addPlayer(AddPlayerCommand command) throws TooManyPlayersException {
-        if (numberOfPlayers + 1 > MAX_PLAYERS) {
+        if (players.size() + 1 > MAX_PLAYERS) {
             throw new TooManyPlayersException();
         }
         AggregateLifecycle.apply(new PlayerAddedEvent(gameId, command.getName(), command.getColor()));
@@ -48,7 +52,7 @@ public class Game {
     @CommandHandler
     public void start(StartGameCommand command) throws NotEnoughPlayersException, GameAlreadyStartedException {
 
-        if (numberOfPlayers < 1) {
+        if (players.size() < 1) {
             throw new NotEnoughPlayersException();
         }
 
@@ -72,15 +76,21 @@ public class Game {
     @EventSourcingHandler
     public void on(BoardSetUpEvent event) {
         gameId = event.getId();
+        players = new HashMap<>();
     }
 
     @EventSourcingHandler
     public void on(PlayerAddedEvent event) {
-        numberOfPlayers += 1;
+        players.put(event.getName(), event.getName());
     }
 
     @EventSourcingHandler
     public void on(GameStartedEvent event) {
         gameStarted = true;
+    }
+
+    @EventSourcingHandler
+    public void on(CardDrawnEvent event) {
+
     }
 }
