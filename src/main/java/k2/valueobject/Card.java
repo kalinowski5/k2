@@ -2,12 +2,14 @@ package k2.valueobject;
 
 import k2.exception.WrongCombinationOfCardPointsException;
 
+import java.util.Objects;
+
 public class Card {
 
-    private PawnColor pawnColor;
-    private Integer upwardMovementPoints;
-    private Integer downwardMovementPoints;
-    private Integer acclimatizationPoints;
+    private final PawnColor pawnColor;
+    private final Integer upwardMovementPoints;
+    private final Integer downwardMovementPoints;
+    private final Integer acclimatizationPoints;
 
     public Card(PawnColor pawnColor, Integer upwardMovementPoints, Integer downwardMovementPoints, Integer acclimatizationPoints) throws WrongCombinationOfCardPointsException
     {
@@ -36,5 +38,39 @@ public class Card {
         }
 
         return CardType.RESCUE;
+    }
+
+    public PawnColor getPawnColor() {
+        return pawnColor;
+    }
+
+    public Integer getUpwardMovementPoints() {
+        return upwardMovementPoints;
+    }
+
+    public Integer getDownwardMovementPoints() {
+        return downwardMovementPoints;
+    }
+
+    public Integer getAcclimatizationPoints() {
+        return acclimatizationPoints;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Card compareTo = (Card) o;
+
+        return Objects.equals(compareTo.getPawnColor(), this.pawnColor) &&
+               Objects.equals(compareTo.getUpwardMovementPoints(), this.upwardMovementPoints) &&
+               Objects.equals(compareTo.getDownwardMovementPoints(), this.downwardMovementPoints) &&
+               Objects.equals(compareTo.getAcclimatizationPoints(), this.acclimatizationPoints);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(pawnColor, upwardMovementPoints, downwardMovementPoints, acclimatizationPoints);
     }
 }

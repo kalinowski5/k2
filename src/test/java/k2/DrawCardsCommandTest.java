@@ -7,6 +7,8 @@ import k2.event.CardDrawnEvent;
 import k2.event.GameStartedEvent;
 import k2.event.PlayerAddedEvent;
 import k2.exception.GameNotStartedException;
+import k2.exception.WrongCombinationOfCardPointsException;
+import k2.valueobject.Card;
 import k2.valueobject.CardType;
 import k2.valueobject.GameId;
 import k2.valueobject.PawnColor;
@@ -25,7 +27,7 @@ public class DrawCardsCommandTest {
     }
 
     @Test
-    public void drawCardsInNewGame() {
+    public void drawCardsInNewGame() throws WrongCombinationOfCardPointsException {
         GameId gameId = new GameId("GAME_1");
         fixture.given(
                     new BoardSetUpEvent(gameId),
@@ -36,12 +38,12 @@ public class DrawCardsCommandTest {
                 .when(new DrawCardsCommand(gameId, PawnColor.BLUE))
                 .expectSuccessfulHandlerExecution()
                 .expectEvents(
-                        new CardDrawnEvent(gameId, PawnColor.BLUE, CardType.MOVEMENT, 2),
-                        new CardDrawnEvent(gameId, PawnColor.BLUE, CardType.MOVEMENT, 2),
-                        new CardDrawnEvent(gameId, PawnColor.BLUE, CardType.MOVEMENT, 2),
-                        new CardDrawnEvent(gameId, PawnColor.BLUE, CardType.MOVEMENT, 2),
-                        new CardDrawnEvent(gameId, PawnColor.BLUE, CardType.MOVEMENT, 2),
-                        new CardDrawnEvent(gameId, PawnColor.BLUE, CardType.MOVEMENT, 2)
+                        new CardDrawnEvent(gameId, new Card(PawnColor.BLUE, 2, 0, 0)),
+                        new CardDrawnEvent(gameId, new Card(PawnColor.BLUE, 2, 0, 0)),
+                        new CardDrawnEvent(gameId, new Card(PawnColor.BLUE, 2, 0, 0)),
+                        new CardDrawnEvent(gameId, new Card(PawnColor.BLUE, 2, 0, 0)),
+                        new CardDrawnEvent(gameId, new Card(PawnColor.BLUE, 2, 0, 0)),
+                        new CardDrawnEvent(gameId, new Card(PawnColor.BLUE, 2, 0, 0))
                 );
     }
 
@@ -57,22 +59,22 @@ public class DrawCardsCommandTest {
     }
 
     @Test
-    public void redrawCards() {
+    public void redrawCards() throws WrongCombinationOfCardPointsException {
         GameId gameId = new GameId("GAME_3");
         fixture.given(
                     new BoardSetUpEvent(gameId),
                     new PlayerAddedEvent(gameId, "John",  PawnColor.BLUE),
                     new GameStartedEvent(gameId),
-                    new CardDrawnEvent(gameId, PawnColor.BLUE, CardType.MOVEMENT, 2),
-                    new CardDrawnEvent(gameId, PawnColor.BLUE, CardType.MOVEMENT, 2),
-                    new CardDrawnEvent(gameId, PawnColor.BLUE, CardType.MOVEMENT, 2)
+                    new CardDrawnEvent(gameId, new Card(PawnColor.BLUE, 2, 0, 0)),
+                    new CardDrawnEvent(gameId, new Card(PawnColor.BLUE, 2, 0, 0)),
+                    new CardDrawnEvent(gameId, new Card(PawnColor.BLUE, 2, 0, 0))
                 )
                 .when(new DrawCardsCommand(gameId, PawnColor.BLUE))
                 .expectSuccessfulHandlerExecution()
                 .expectEvents(
-                    new CardDrawnEvent(gameId, PawnColor.BLUE, CardType.MOVEMENT, 2),
-                    new CardDrawnEvent(gameId, PawnColor.BLUE, CardType.MOVEMENT, 2),
-                    new CardDrawnEvent(gameId, PawnColor.BLUE, CardType.MOVEMENT, 2)
+                    new CardDrawnEvent(gameId, new Card(PawnColor.BLUE, 2, 0, 0)),
+                    new CardDrawnEvent(gameId, new Card(PawnColor.BLUE, 2, 0, 0)),
+                    new CardDrawnEvent(gameId, new Card(PawnColor.BLUE, 2, 0, 0))
                 );
     }
 }

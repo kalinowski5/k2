@@ -10,7 +10,7 @@ import k2.event.CardDrawnEvent;
 import k2.event.GameStartedEvent;
 import k2.event.PlayerAddedEvent;
 import k2.exception.*;
-import k2.valueobject.CardType;
+import k2.valueobject.Card;
 import k2.valueobject.GameId;
 import k2.valueobject.PawnColor;
 import org.axonframework.commandhandling.CommandHandler;
@@ -69,14 +69,14 @@ public class Game {
     }
 
     @CommandHandler
-    public void drawCards(DrawCardsCommand command) throws GameNotStartedException {
+    public void drawCards(DrawCardsCommand command) throws GameNotStartedException, WrongCombinationOfCardPointsException {
         if (!this.gameStarted) {
             throw new GameNotStartedException();
         }
         Player player = this.players.get(command.getPlayer());
         Integer numberOfCardsToDraw = player.getNumberOfCardToDraw();
         for (Integer i = 1; i <= numberOfCardsToDraw; i++) {
-            AggregateLifecycle.apply(new CardDrawnEvent(this.gameId, command.getPlayer(), CardType.MOVEMENT, 2));
+            AggregateLifecycle.apply(new CardDrawnEvent(this.gameId, new Card(command.getPlayer(), 2, 0, 0)));
         }
     }
 
@@ -98,7 +98,7 @@ public class Game {
 
     @EventSourcingHandler
     public void on(CardDrawnEvent event) {
-        Player player = this.players.get(event.getPlayer());
+        Player player = this.players.get(event.getCard().getPawnColor());
         player.drawOneCard();
     }
 }
