@@ -1,9 +1,11 @@
 package k2.aggregate;
 
 import k2.command.AddPlayerCommand;
+import k2.command.DrawCardsCommand;
 import k2.command.SetupBoardCommand;
 import k2.command.StartGameCommand;
 import k2.event.BoardSetUpEvent;
+import k2.event.CardDrawnEvent;
 import k2.event.GameStartedEvent;
 import k2.event.PlayerAddedEvent;
 import k2.exception.GameAlreadyStartedException;
@@ -55,6 +57,16 @@ public class Game {
         }
 
         AggregateLifecycle.apply(new GameStartedEvent(gameId));
+    }
+
+    @CommandHandler
+    public void drawCards(DrawCardsCommand command) {
+        AggregateLifecycle.apply(new CardDrawnEvent(this.gameId, command.getPlayer(), "move", 2));
+        AggregateLifecycle.apply(new CardDrawnEvent(this.gameId, command.getPlayer(), "move", 2));
+        AggregateLifecycle.apply(new CardDrawnEvent(this.gameId, command.getPlayer(), "move", 2));
+        AggregateLifecycle.apply(new CardDrawnEvent(this.gameId, command.getPlayer(), "move", 2));
+        AggregateLifecycle.apply(new CardDrawnEvent(this.gameId, command.getPlayer(), "move", 2));
+        AggregateLifecycle.apply(new CardDrawnEvent(this.gameId, command.getPlayer(), "move", 2));
     }
 
     @EventSourcingHandler
