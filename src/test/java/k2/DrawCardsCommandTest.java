@@ -6,6 +6,7 @@ import k2.event.BoardSetUpEvent;
 import k2.event.CardDrawnEvent;
 import k2.event.GameStartedEvent;
 import k2.event.PlayerAddedEvent;
+import k2.exception.GameNotStartedException;
 import k2.valueobject.GameId;
 import org.axonframework.test.aggregate.AggregateTestFixture;
 import org.axonframework.test.aggregate.FixtureConfiguration;
@@ -41,6 +42,15 @@ public class DrawCardsCommandTest {
                 );
     }
 
-
+    @Test
+    public void drawCardsInNotStartedGame() {
+        GameId gameId = new GameId("GAME_2");
+        fixture.given(
+            new BoardSetUpEvent(gameId),
+            new PlayerAddedEvent(gameId, "John", "red")
+        )
+        .when(new DrawCardsCommand(gameId, "Kate"))
+        .expectException(GameNotStartedException.class);
+    }
 
 }

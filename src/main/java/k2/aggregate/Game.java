@@ -9,6 +9,7 @@ import k2.event.CardDrawnEvent;
 import k2.event.GameStartedEvent;
 import k2.event.PlayerAddedEvent;
 import k2.exception.GameAlreadyStartedException;
+import k2.exception.GameNotStartedException;
 import k2.exception.NotEnoughPlayersException;
 import k2.exception.TooManyPlayersException;
 import k2.valueobject.GameId;
@@ -64,7 +65,10 @@ public class Game {
     }
 
     @CommandHandler
-    public void drawCards(DrawCardsCommand command) {
+    public void drawCards(DrawCardsCommand command) throws GameNotStartedException {
+        if (!this.gameStarted) {
+            throw new GameNotStartedException();
+        }
         AggregateLifecycle.apply(new CardDrawnEvent(this.gameId, command.getPlayer(), "move", 2));
         AggregateLifecycle.apply(new CardDrawnEvent(this.gameId, command.getPlayer(), "move", 2));
         AggregateLifecycle.apply(new CardDrawnEvent(this.gameId, command.getPlayer(), "move", 2));
