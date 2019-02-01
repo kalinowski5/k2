@@ -55,4 +55,24 @@ public class DrawCardsCommandTest {
         .when(new DrawCardsCommand(gameId, PawnColor.RED))
         .expectException(GameNotStartedException.class);
     }
+
+    @Test
+    public void redrawCards() {
+        GameId gameId = new GameId("GAME_3");
+        fixture.given(
+                    new BoardSetUpEvent(gameId),
+                    new PlayerAddedEvent(gameId, "John",  PawnColor.BLUE),
+                    new GameStartedEvent(gameId),
+                    new CardDrawnEvent(gameId, PawnColor.BLUE, CardType.MOVEMENT, 2),
+                    new CardDrawnEvent(gameId, PawnColor.BLUE, CardType.MOVEMENT, 2),
+                    new CardDrawnEvent(gameId, PawnColor.BLUE, CardType.MOVEMENT, 2)
+                )
+                .when(new DrawCardsCommand(gameId, PawnColor.BLUE))
+                .expectSuccessfulHandlerExecution()
+                .expectEvents(
+                    new CardDrawnEvent(gameId, PawnColor.BLUE, CardType.MOVEMENT, 2),
+                    new CardDrawnEvent(gameId, PawnColor.BLUE, CardType.MOVEMENT, 2),
+                    new CardDrawnEvent(gameId, PawnColor.BLUE, CardType.MOVEMENT, 2)
+                );
+    }
 }

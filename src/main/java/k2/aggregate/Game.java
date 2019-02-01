@@ -73,12 +73,11 @@ public class Game {
         if (!this.gameStarted) {
             throw new GameNotStartedException();
         }
-        AggregateLifecycle.apply(new CardDrawnEvent(this.gameId, command.getPlayer(), CardType.MOVEMENT, 2));
-        AggregateLifecycle.apply(new CardDrawnEvent(this.gameId, command.getPlayer(), CardType.MOVEMENT, 2));
-        AggregateLifecycle.apply(new CardDrawnEvent(this.gameId, command.getPlayer(), CardType.MOVEMENT, 2));
-        AggregateLifecycle.apply(new CardDrawnEvent(this.gameId, command.getPlayer(), CardType.MOVEMENT, 2));
-        AggregateLifecycle.apply(new CardDrawnEvent(this.gameId, command.getPlayer(), CardType.MOVEMENT, 2));
-        AggregateLifecycle.apply(new CardDrawnEvent(this.gameId, command.getPlayer(), CardType.MOVEMENT, 2));
+        Player player = this.players.get(command.getPlayer());
+        Integer numberOfCardsToDraw = player.getNumberOfCardToDraw();
+        for (Integer i = 1; i <= numberOfCardsToDraw; i++) {
+            AggregateLifecycle.apply(new CardDrawnEvent(this.gameId, command.getPlayer(), CardType.MOVEMENT, 2));
+        }
     }
 
     @EventSourcingHandler
@@ -99,6 +98,7 @@ public class Game {
 
     @EventSourcingHandler
     public void on(CardDrawnEvent event) {
-
+        Player player = this.players.get(event.getPlayer());
+        player.drawOneCard();
     }
 }
