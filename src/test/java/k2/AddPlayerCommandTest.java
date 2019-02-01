@@ -4,6 +4,7 @@ import k2.aggregate.Game;
 import k2.command.AddPlayerCommand;
 import k2.event.BoardSetUpEvent;
 import k2.event.PlayerAddedEvent;
+import k2.exception.ColorAlreadyUsedException;
 import k2.exception.TooManyPlayersException;
 import k2.valueobject.GameId;
 import k2.valueobject.PawnColor;
@@ -41,8 +42,14 @@ public class AddPlayerCommandTest {
                 .expectException(TooManyPlayersException.class);
     }
 
-//    @Test
-//    public void sameColorPlayer() {
-//          .expectException(ColorAlreadyUsedException.class);
-//    }
+    @Test
+    public void colorAlreadyUsed() {
+        GameId gameId = new GameId("GAME_3");
+        fixture.given(
+                    new BoardSetUpEvent(gameId),
+                    new PlayerAddedEvent(gameId, "John",  PawnColor.VIOLET)
+                )
+                .when(new AddPlayerCommand(gameId, "James",  PawnColor.VIOLET))
+                .expectException(ColorAlreadyUsedException.class);
+    }
 }

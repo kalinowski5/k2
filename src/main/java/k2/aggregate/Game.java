@@ -8,10 +8,7 @@ import k2.event.BoardSetUpEvent;
 import k2.event.CardDrawnEvent;
 import k2.event.GameStartedEvent;
 import k2.event.PlayerAddedEvent;
-import k2.exception.GameAlreadyStartedException;
-import k2.exception.GameNotStartedException;
-import k2.exception.NotEnoughPlayersException;
-import k2.exception.TooManyPlayersException;
+import k2.exception.*;
 import k2.valueobject.CardType;
 import k2.valueobject.GameId;
 import k2.valueobject.PawnColor;
@@ -45,10 +42,15 @@ public class Game {
     }
 
     @CommandHandler
-    public void addPlayer(AddPlayerCommand command) throws TooManyPlayersException {
+    public void addPlayer(AddPlayerCommand command) throws TooManyPlayersException, ColorAlreadyUsedException {
         if (players.size() + 1 > MAX_PLAYERS) {
             throw new TooManyPlayersException();
         }
+
+        if (players.containsKey(command.getColor())) {
+            throw new ColorAlreadyUsedException();
+        }
+
         AggregateLifecycle.apply(new PlayerAddedEvent(gameId, command.getName(), command.getColor()));
     }
 
