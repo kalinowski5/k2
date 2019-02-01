@@ -9,7 +9,6 @@ import k2.event.PlayerAddedEvent;
 import k2.exception.GameNotStartedException;
 import k2.exception.WrongCombinationOfCardPointsException;
 import k2.valueobject.Card;
-import k2.valueobject.CardType;
 import k2.valueobject.GameId;
 import k2.valueobject.PawnColor;
 import org.axonframework.test.aggregate.AggregateTestFixture;
