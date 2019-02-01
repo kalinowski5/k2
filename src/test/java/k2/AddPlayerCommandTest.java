@@ -5,7 +5,6 @@ import k2.command.AddPlayerCommand;
 import k2.event.BoardSetUpEvent;
 import k2.event.PlayerAddedEvent;
 import k2.exception.ColorAlreadyUsedException;
-import k2.exception.TooManyPlayersException;
 import k2.valueobject.GameId;
 import k2.valueobject.PawnColor;
 import org.axonframework.test.aggregate.AggregateTestFixture;
@@ -31,20 +30,8 @@ public class AddPlayerCommandTest {
     }
 
     @Test
-    public void tooManyPlayers() {
-        GameId gameId = new GameId("GAME_2");
-        fixture.given(
-                    new BoardSetUpEvent(gameId),
-                    new PlayerAddedEvent(gameId, "John",  PawnColor.RED),
-                    new PlayerAddedEvent(gameId, "Kate",  PawnColor.BLUE)
-                )
-                .when(new AddPlayerCommand(gameId, "James",  PawnColor.GREEN))
-                .expectException(TooManyPlayersException.class);
-    }
-
-    @Test
     public void colorAlreadyUsed() {
-        GameId gameId = new GameId("GAME_3");
+        GameId gameId = new GameId("GAME_2");
         fixture.given(
                     new BoardSetUpEvent(gameId),
                     new PlayerAddedEvent(gameId, "John",  PawnColor.VIOLET)

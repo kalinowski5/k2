@@ -24,8 +24,6 @@ import java.util.Map;
 @Aggregate
 public class Game {
 
-    private static final int MAX_PLAYERS = 2;
-
     @AggregateIdentifier
     private GameId gameId;
     private Map<PawnColor, String> players;
@@ -42,10 +40,7 @@ public class Game {
     }
 
     @CommandHandler
-    public void addPlayer(AddPlayerCommand command) throws TooManyPlayersException, ColorAlreadyUsedException {
-        if (players.size() + 1 > MAX_PLAYERS) {
-            throw new TooManyPlayersException();
-        }
+    public void addPlayer(AddPlayerCommand command) throws ColorAlreadyUsedException {
 
         if (players.containsKey(command.getColor())) {
             throw new ColorAlreadyUsedException();
