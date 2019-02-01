@@ -21,6 +21,7 @@ public class DrawCardsCommandTest {
     @Before
     public void setUp() {
         fixture = new AggregateTestFixture(Game.class);
+        fixture.setReportIllegalStateChange(false);
     }
 
     @Test
@@ -54,5 +55,4 @@ public class DrawCardsCommandTest {
         .when(new DrawCardsCommand(gameId, PawnColor.RED))
         .expectException(GameNotStartedException.class);
     }
-
 }

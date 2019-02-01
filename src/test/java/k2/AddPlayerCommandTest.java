@@ -18,6 +18,7 @@ public class AddPlayerCommandTest {
     @Before
     public void setUp() {
         fixture = new AggregateTestFixture(Game.class);
+        fixture.setReportIllegalStateChange(false);
     }
 
     @Test
