@@ -1,6 +1,7 @@
 package k2.command;
 
 import k2.valueobject.GameId;
+import k2.valueobject.PawnColor;
 import org.axonframework.commandhandling.TargetAggregateIdentifier;
 
 public class AddPlayerCommand
@@ -8,9 +9,9 @@ public class AddPlayerCommand
     @TargetAggregateIdentifier
     private GameId gameId;
     private final String name;
-    private final String color;
+    private final PawnColor color;
 
-    public AddPlayerCommand(GameId gameId, String name, String color) {
+    public AddPlayerCommand(GameId gameId, String name, PawnColor color) {
         this.gameId = gameId;
         this.name = name;
         this.color = color;
@@ -24,7 +25,7 @@ public class AddPlayerCommand
         return name;
     }
 
-    public String getColor() {
+    public PawnColor getColor() {
         return color;
     }
 }

@@ -3,6 +3,7 @@ package k2.controller;
 import k2.command.AddPlayerCommand;
 import k2.command.SetupBoardCommand;
 import k2.valueobject.GameId;
+import k2.valueobject.PawnColor;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.joda.time.LocalTime;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,9 +26,9 @@ public class HelloController {
         try {
             GameId gameId = new GameId("game_" + UUID.randomUUID().toString());
             commandGateway.sendAndWait(new SetupBoardCommand(gameId));
-            commandGateway.sendAndWait(new AddPlayerCommand(gameId,"Michał", "red"));
-            commandGateway.sendAndWait(new AddPlayerCommand(gameId,"Andrew", "green"));
-            //commandGateway.sendAndWait(new AddPlayerCommand(gameId,"Bob", "blue"));
+            commandGateway.sendAndWait(new AddPlayerCommand(gameId,"Michał", PawnColor.RED));
+            commandGateway.sendAndWait(new AddPlayerCommand(gameId,"Andrew", PawnColor.GREEN));
+            //commandGateway.sendAndWait(new AddPlayerCommand(gameId,"Bob", PawnColor.BLUE));
         } catch (Exception e) {
             return "<h1>Error</h1>" + e.getClass() + " " + e.getMessage();
         }

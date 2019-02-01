@@ -8,6 +8,7 @@ import k2.event.PlayerAddedEvent;
 import k2.exception.GameAlreadyStartedException;
 import k2.exception.NotEnoughPlayersException;
 import k2.valueobject.GameId;
+import k2.valueobject.PawnColor;
 import org.axonframework.test.aggregate.AggregateTestFixture;
 import org.axonframework.test.aggregate.FixtureConfiguration;
 import org.junit.Before;
@@ -26,8 +27,8 @@ public class StartGameCommandTest {
         GameId gameId = new GameId("GAME_1");
         fixture.given(
                     new BoardSetUpEvent(gameId),
-                    new PlayerAddedEvent(gameId, "John", "red"),
-                    new PlayerAddedEvent(gameId, "Kate", "blue")
+                    new PlayerAddedEvent(gameId, "John",  PawnColor.RED),
+                    new PlayerAddedEvent(gameId, "Kate",  PawnColor.BLUE)
                 )
                 .when(new StartGameCommand(gameId))
                 .expectSuccessfulHandlerExecution()
@@ -49,7 +50,7 @@ public class StartGameCommandTest {
         GameId gameId = new GameId("GAME_3");
         fixture.given(
                     new BoardSetUpEvent(gameId),
-                    new PlayerAddedEvent(gameId, "John", "red"),
+                    new PlayerAddedEvent(gameId, "John",  PawnColor.RED),
                     new GameStartedEvent(gameId)
                 )
                 .when(new StartGameCommand(gameId))

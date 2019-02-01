@@ -13,6 +13,7 @@ import k2.exception.GameNotStartedException;
 import k2.exception.NotEnoughPlayersException;
 import k2.exception.TooManyPlayersException;
 import k2.valueobject.GameId;
+import k2.valueobject.PawnColor;
 import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.commandhandling.model.AggregateIdentifier;
 import org.axonframework.commandhandling.model.AggregateLifecycle;
@@ -29,7 +30,7 @@ public class Game {
 
     @AggregateIdentifier
     private GameId gameId;
-    private Map<String, String> players;
+    private Map<PawnColor, String> players;
     private boolean gameStarted = false;
 
 
@@ -85,7 +86,7 @@ public class Game {
 
     @EventSourcingHandler
     public void on(PlayerAddedEvent event) {
-        players.put(event.getName(), event.getName());
+        players.put(event.getColor(), event.getName());
     }
 
     @EventSourcingHandler
