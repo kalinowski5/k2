@@ -3,7 +3,6 @@ package k2.entity;
 import k2.valueobject.PawnColor;
 import org.axonframework.commandhandling.model.EntityId;
 
-
 public class Player {
 
     private static final int MAX_NUMBER_OF_CARDS_ON_HAND = 6;
@@ -18,14 +17,6 @@ public class Player {
         this.color = color;
         this.name = name;
         this.cardsDrawn = 0;
-    }
-
-    public PawnColor getColor() {
-        return color;
-    }
-
-    public String getName() {
-        return name;
     }
 
     public Integer getNumberOfCardToDraw()
