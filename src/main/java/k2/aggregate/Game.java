@@ -104,6 +104,10 @@ public class Game {
         }
 
         AggregateLifecycle.apply(new ClimberMovedEvent(gameId, command.getPlayer(), currentPosition, command.getTargetSpace(), movementCost));
+
+        if (command.getTargetSpace() == Space.SUMMIT) {
+            System.out.println("TAAADAAAM! You reached the K2 summit!");
+        }
     }
 
     @EventSourcingHandler
