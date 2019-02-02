@@ -16,6 +16,9 @@ import org.axonframework.test.aggregate.FixtureConfiguration;
 import org.junit.Before;
 import org.junit.Test;
 
+import static org.axonframework.test.matchers.Matchers.*;
+import static org.hamcrest.CoreMatchers.instanceOf;
+
 public class DrawCardsCommandTest {
     private FixtureConfiguration fixture;
 
@@ -36,14 +39,15 @@ public class DrawCardsCommandTest {
                 )
                 .when(new DrawCardsCommand(gameId, PawnColor.BLUE))
                 .expectSuccessfulHandlerExecution()
-                .expectEvents(
-                        new CardDrawnEvent(gameId, new Card(PawnColor.BLUE, 2, 0, 0)),
-                        new CardDrawnEvent(gameId, new Card(PawnColor.BLUE, 2, 0, 0)),
-                        new CardDrawnEvent(gameId, new Card(PawnColor.BLUE, 2, 0, 0)),
-                        new CardDrawnEvent(gameId, new Card(PawnColor.BLUE, 2, 0, 0)),
-                        new CardDrawnEvent(gameId, new Card(PawnColor.BLUE, 2, 0, 0)),
-                        new CardDrawnEvent(gameId, new Card(PawnColor.BLUE, 2, 0, 0))
-                );
+                .expectEventsMatching(payloadsMatching(exactSequenceOf( //Inspired by https://groups.google.com/forum/#!topic/axonframework/kr8AMCqh3io
+                    instanceOf(CardDrawnEvent.class),
+                    instanceOf(CardDrawnEvent.class),
+                    instanceOf(CardDrawnEvent.class),
+                    instanceOf(CardDrawnEvent.class),
+                    instanceOf(CardDrawnEvent.class),
+                    instanceOf(CardDrawnEvent.class),
+                    andNoMore()
+                )));
     }
 
     @Test
@@ -70,10 +74,11 @@ public class DrawCardsCommandTest {
                 )
                 .when(new DrawCardsCommand(gameId, PawnColor.BLUE))
                 .expectSuccessfulHandlerExecution()
-                .expectEvents(
-                    new CardDrawnEvent(gameId, new Card(PawnColor.BLUE, 2, 0, 0)),
-                    new CardDrawnEvent(gameId, new Card(PawnColor.BLUE, 2, 0, 0)),
-                    new CardDrawnEvent(gameId, new Card(PawnColor.BLUE, 2, 0, 0))
-                );
+                .expectEventsMatching(payloadsMatching(exactSequenceOf( //Inspired by https://groups.google.com/forum/#!topic/axonframework/kr8AMCqh3io
+                        instanceOf(CardDrawnEvent.class),
+                        instanceOf(CardDrawnEvent.class),
+                        instanceOf(CardDrawnEvent.class),
+                        andNoMore()
+                )));
     }
 }

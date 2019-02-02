@@ -1,14 +1,8 @@
 package k2.aggregate;
 
-import k2.command.AddPlayerCommand;
-import k2.command.DrawCardsCommand;
-import k2.command.SetupBoardCommand;
-import k2.command.StartGameCommand;
+import k2.command.*;
 import k2.entity.Player;
-import k2.event.BoardSetUpEvent;
-import k2.event.CardDrawnEvent;
-import k2.event.GameStartedEvent;
-import k2.event.PlayerAddedEvent;
+import k2.event.*;
 import k2.exception.*;
 import k2.valueobject.Card;
 import k2.valueobject.GameId;
@@ -33,7 +27,6 @@ public class Game {
     private Map<PawnColor, Player> players;
 
     private boolean gameStarted = false;
-
 
     private Game() {
     }
@@ -74,10 +67,21 @@ public class Game {
             throw new GameNotStartedException();
         }
         Player player = this.players.get(command.getPlayer());
-        Integer numberOfCardsToDraw = player.getNumberOfCardToDraw();
-        for (Integer i = 1; i <= numberOfCardsToDraw; i++) {
-            AggregateLifecycle.apply(new CardDrawnEvent(this.gameId, new Card(command.getPlayer(), 2, 0, 0)));
+        player.getCardsToDraw().iterator().forEachRemaining(
+                card -> AggregateLifecycle.apply(new CardDrawnEvent(this.gameId, card))
+        );
+    }
+
+    @CommandHandler
+    public void revealCard(RevealCardCommand command) throws CardRevealViolationException {
+        Card card = command.getCard();
+        Player player = players.get(card.getPawnColor());
+
+        if (!player.canReveal(card)) {
+            throw new CardRevealViolationException();
         }
+
+        AggregateLifecycle.apply(new CardRevealedEvent(this.gameId, command.getCard()));
     }
 
     @EventSourcingHandler
@@ -87,7 +91,7 @@ public class Game {
     }
 
     @EventSourcingHandler
-    public void on(PlayerAddedEvent event) {
+    public void on(PlayerAddedEvent event) throws WrongCombinationOfCardPointsException {
         players.put(event.getColor(), new Player(event.getColor(), event.getName()));
     }
 
@@ -99,6 +103,11 @@ public class Game {
     @EventSourcingHandler
     public void on(CardDrawnEvent event) {
         Player player = this.players.get(event.getCard().getPawnColor());
-        player.drawOneCard();
+        player.drawOneCard(event.getCard());
+    }
+
+    @EventSourcingHandler
+    public void on(CardRevealedEvent event) {
+
     }
 }
