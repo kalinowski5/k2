@@ -3,8 +3,10 @@ package k2;
 import k2.aggregate.Game;
 import k2.command.AddPlayerCommand;
 import k2.event.BoardSetUpEvent;
+import k2.event.GameStartedEvent;
 import k2.event.PlayerAddedEvent;
 import k2.exception.ColorAlreadyUsedException;
+import k2.exception.GameAlreadyStartedException;
 import k2.valueobject.GameId;
 import k2.valueobject.PawnColor;
 import org.axonframework.test.aggregate.AggregateTestFixture;
@@ -39,5 +41,18 @@ public class AddPlayerCommandTest {
                 )
                 .when(new AddPlayerCommand(gameId, "James",  PawnColor.VIOLET))
                 .expectException(ColorAlreadyUsedException.class);
+    }
+
+    @Test
+    public void addPlayerToAlreadyStartedGame() {
+        GameId gameId = new GameId("GAME_3");
+        fixture.given(
+                new BoardSetUpEvent(gameId),
+                new PlayerAddedEvent(gameId, "John",  PawnColor.VIOLET),
+                new PlayerAddedEvent(gameId, "Reihnold",  PawnColor.YELLOW),
+                new GameStartedEvent(gameId)
+        )
+                .when(new AddPlayerCommand(gameId, "James",  PawnColor.BLUE))
+                .expectException(GameAlreadyStartedException.class);
     }
 }

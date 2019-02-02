@@ -32,6 +32,8 @@ public class Game {
 
     private boolean gameStarted = false;
 
+    private Phase phase = Phase.CARD_SELECTION;
+
     private Game() {
     }
 
@@ -42,10 +44,14 @@ public class Game {
     }
 
     @CommandHandler
-    public void addPlayer(AddPlayerCommand command) throws ColorAlreadyUsedException {
+    public void addPlayer(AddPlayerCommand command) throws ColorAlreadyUsedException, GameAlreadyStartedException {
 
         if (players.containsKey(command.getColor())) {
             throw new ColorAlreadyUsedException();
+        }
+
+        if (gameStarted) {
+            throw new GameAlreadyStartedException();
         }
 
         AggregateLifecycle.apply(new PlayerAddedEvent(gameId, command.getName(), command.getColor()));

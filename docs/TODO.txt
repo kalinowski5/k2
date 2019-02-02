@@ -12,3 +12,4 @@
 [TODO] Risk tokens
 [TODO] Downward movement / Rope cards
 [TODO] AI
+[TODO] Basic HTTP API (ie https://www.novatec-gmbh.de/en/blog/event-sourcing-spring-boot-axon/)
