@@ -14,8 +14,8 @@ import org.axonframework.spring.stereotype.Aggregate;
 import org.jgrapht.Graph;
 import org.jgrapht.alg.interfaces.ShortestPathAlgorithm;
 import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
-import org.jgrapht.graph.DefaultDirectedGraph;
-import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.graph.DefaultDirectedWeightedGraph;
+import org.jgrapht.graph.DefaultWeightedEdge;
 
 import java.util.*;
 
@@ -28,7 +28,7 @@ public class Game {
     @AggregateMember
     private Map<PawnColor, Player> players;
 
-    Graph<Space, DefaultEdge> graph = new DefaultDirectedGraph<>(DefaultEdge.class);
+    Graph<Space, DefaultWeightedEdge> graph = new DefaultDirectedWeightedGraph<>(DefaultWeightedEdge.class); //@TODO: Change to undirected
 
     private boolean gameStarted = false;
 
@@ -88,32 +88,45 @@ public class Game {
         AggregateLifecycle.apply(new CardRevealedEvent(this.gameId, command.getCard()));
     }
 
+    @CommandHandler
+    public void revealCard(MoveClimberCommand command) {
+
+        DijkstraShortestPath<Space, DefaultWeightedEdge> dijkstraAlg = new DijkstraShortestPath<>(graph);
+        ShortestPathAlgorithm.SingleSourcePaths<Space, DefaultWeightedEdge> iPaths = dijkstraAlg.getPaths(Space.BASE_CAMP);
+
+        Integer movementPointsUsed = (int) iPaths.getWeight(command.getTargetSpace());
+
+        AggregateLifecycle.apply(new ClimberMovedEvent(gameId, command.getPlayer(), Space.BASE_CAMP, command.getTargetSpace(), movementPointsUsed));
+    }
+
     @EventSourcingHandler
     public void on(BoardSetUpEvent event) {
         gameId = event.getId();
         players = new HashMap<>();
 
-        graph.addVertex(Space.K2_BASE_CAMP);
+        graph.addVertex(Space.BASE_CAMP);
         graph.addVertex(Space.S1);
         graph.addVertex(Space.S2);
         graph.addVertex(Space.S3);
         graph.addVertex(Space.S4);
         graph.addVertex(Space.S5);
         graph.addVertex(Space.S6);
-        graph.addVertex(Space.K2_SUMMIT);
+        graph.addVertex(Space.S7);
+        graph.addVertex(Space.SUMMIT);
 
-        graph.addEdge(Space.K2_BASE_CAMP, Space.S1);
+        graph.addEdge(Space.BASE_CAMP, Space.S1);
         graph.addEdge(Space.S1, Space.S2);
         graph.addEdge(Space.S2, Space.S3);
         graph.addEdge(Space.S2, Space.S4);
         graph.addEdge(Space.S3, Space.S5);
+        graph.addEdge(Space.S4, Space.S6);
         graph.addEdge(Space.S4, Space.S5);
-        graph.addEdge(Space.S5, Space.S6);
-        graph.addEdge(Space.S6, Space.K2_SUMMIT);
+        graph.addEdge(Space.S5, Space.S7);
+        graph.addEdge(Space.S6, Space.S7);
+        //...
+        graph.addEdge(Space.S7, Space.SUMMIT);
+        graph.setEdgeWeight(Space.S7, Space.SUMMIT, Space.SUMMIT.getCostOfEntry());//@TODO: Use only when cost is gt 0
 
-        DijkstraShortestPath<Space, DefaultEdge> dijkstraAlg = new DijkstraShortestPath<>(graph);
-        ShortestPathAlgorithm.SingleSourcePaths<Space, DefaultEdge> iPaths = dijkstraAlg.getPaths(Space.K2_BASE_CAMP);
-        System.out.println(iPaths.getPath(Space.K2_SUMMIT) + "\n");
 
     }
 

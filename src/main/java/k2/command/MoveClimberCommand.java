@@ -19,4 +19,12 @@ public class MoveClimberCommand
     public GameId getGameId() {
         return gameId;
     }
+
+    public PawnColor getPlayer() {
+        return player;
+    }
+
+    public Space getTargetSpace() {
+        return targetSpace;
+    }
 }

@@ -2,14 +2,15 @@ package k2.valueobject;
 
 public enum Space {
 
-    K2_BASE_CAMP(5000, 1, 1),
+    BASE_CAMP(5000, 1, 1),
     S1(5000, 1, 1),
     S2(5000, 1, 1),
     S3(5000, 1, 1),
     S4(5000, 1, 1),
     S5(5000, 1, 1),
     S6(5000, 1, 1),
-    K2_SUMMIT(8000, 10, -2, 3);
+    S7(5000, 1, 1),
+    SUMMIT(8000, 10, -2, 3);
 
     private Integer altitude;
     private Integer level;
@@ -30,4 +31,7 @@ public enum Space {
         this.costOfEntry = costOfEntry;
     }
 
+    public Integer getCostOfEntry() {
+        return costOfEntry;
+    }
 }
