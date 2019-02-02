@@ -80,7 +80,7 @@ public class DrawCardsCommandTest {
     }
 
     @Test
-    public void finishDeck() throws WrongCombinationOfCardPointsException {
+    public void reuseRevealedCardsAfterWholeDeckIsUsed() throws WrongCombinationOfCardPointsException {
         GameId gameId = new GameId("GAME_4");
 
         Card card1 = new Card(PawnColor.BLUE, 1, 0, 0);
