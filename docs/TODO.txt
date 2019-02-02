@@ -1,0 +1,14 @@
+[TODO] Phases and Turns
+[TODO] Acclimatization / Deaths
+[TODO] Weather
+[TODO] Winter/summer boards
+[TODO] All spaces on summer board
+[TODO] GameResult aggregate root and related sagas
+[TODO] Prevent from moving withing the same Space (ie. from space S4 to S4)
+[TODO] Limits of climbers standing on single Space (dependent on level and number of players in game)
+[TODO] UI
+[TODO] Tents
+[TODO] Two pawns per player
+[TODO] Risk tokens
+[TODO] Downward movement / Rope cards
+[TODO] AI
