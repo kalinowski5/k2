@@ -28,7 +28,7 @@ public class Game {
     @AggregateMember
     private Map<PawnColor, Player> players;
 
-    Graph<Space, DefaultWeightedEdge> graph = new DefaultDirectedWeightedGraph<>(DefaultWeightedEdge.class); //@TODO: Change to undirected
+    Graph<Space, DefaultWeightedEdge> graph = new DefaultDirectedWeightedGraph<>(DefaultWeightedEdge.class); //@TODO: Change to undirected?
 
     private boolean gameStarted = false;
 
@@ -89,14 +89,21 @@ public class Game {
     }
 
     @CommandHandler
-    public void revealCard(MoveClimberCommand command) {
+    public void moveClimber(MoveClimberCommand command) throws NotEnoughMovementPointsException {
+
+        Player player = this.players.get(command.getPlayer());
+        Space currentPosition = player.getCurrentPosition();
 
         DijkstraShortestPath<Space, DefaultWeightedEdge> dijkstraAlg = new DijkstraShortestPath<>(graph);
-        ShortestPathAlgorithm.SingleSourcePaths<Space, DefaultWeightedEdge> iPaths = dijkstraAlg.getPaths(Space.BASE_CAMP);
+        ShortestPathAlgorithm.SingleSourcePaths<Space, DefaultWeightedEdge> iPaths = dijkstraAlg.getPaths(currentPosition);
 
-        Integer movementPointsUsed = (int) iPaths.getWeight(command.getTargetSpace());
+        Integer movementCost = (int) iPaths.getWeight(command.getTargetSpace());
 
-        AggregateLifecycle.apply(new ClimberMovedEvent(gameId, command.getPlayer(), Space.BASE_CAMP, command.getTargetSpace(), movementPointsUsed));
+        if (player.getAvailableMovementPoints() < movementCost) {
+            throw new NotEnoughMovementPointsException(movementCost, player.getAvailableMovementPoints());
+        }
+
+        AggregateLifecycle.apply(new ClimberMovedEvent(gameId, command.getPlayer(), currentPosition, command.getTargetSpace(), movementCost));
     }
 
     @EventSourcingHandler
@@ -150,5 +157,11 @@ public class Game {
     public void on(CardRevealedEvent event) {
         Player player = this.players.get(event.getCard().getPawnColor());
         player.revealOneCard(event.getCard());
+    }
+
+    @EventSourcingHandler
+    public void on(ClimberMovedEvent event) {
+        Player player = this.players.get(event.getPlayer());
+        player.moveTo(event.getTo(), event.getMovementPointsUsed());
     }
 }

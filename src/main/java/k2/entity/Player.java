@@ -3,6 +3,7 @@ package k2.entity;
 import k2.exception.WrongCombinationOfCardPointsException;
 import k2.valueobject.Card;
 import k2.valueobject.PawnColor;
+import k2.valueobject.Space;
 import org.axonframework.commandhandling.model.EntityId;
 
 import java.util.ArrayList;
@@ -17,6 +18,8 @@ public class Player
     @EntityId
     private PawnColor color;
     private String name;
+    private Space currentPosition = Space.BASE_CAMP;
+    private Integer availableMovementPoints = 0;
 
     private List<Card> cardsNotDrawn = new ArrayList<>();
     private List<Card> cardsDrawn = new ArrayList<>();
@@ -91,10 +94,24 @@ public class Player
     {
         cardsRevealed.add(card);
         cardsDrawn.remove(card);
+        availableMovementPoints += card.getUpwardMovementPoints();
+    }
+
+    public void moveTo(Space targetSpace, Integer pointsUsed) {
+        currentPosition = targetSpace;
+        availableMovementPoints -= pointsUsed;
     }
 
     public boolean canReveal(Card card)
     {
         return cardsDrawn.contains(card);
+    }
+
+    public Space getCurrentPosition() {
+        return currentPosition;
+    }
+
+    public Integer getAvailableMovementPoints() {
+        return availableMovementPoints;
     }
 }

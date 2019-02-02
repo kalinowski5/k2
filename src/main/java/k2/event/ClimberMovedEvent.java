@@ -19,4 +19,16 @@ public class ClimberMovedEvent {
         this.to = to;
         this.movementPointsUsed = movementPointsUsed;
     }
+
+    public PawnColor getPlayer() {
+        return player;
+    }
+
+    public Space getTo() {
+        return to;
+    }
+
+    public Integer getMovementPointsUsed() {
+        return movementPointsUsed;
+    }
 }
