@@ -20,7 +20,7 @@ public class Player
 
     private List<Card> cardsNotDrawn = new ArrayList<>();
     private List<Card> cardsDrawn = new ArrayList<>();
-    private List<Card> cardsUsed = new ArrayList<>();
+    private List<Card> cardsRevealed = new ArrayList<>();
 
     public Player(PawnColor color, String name) throws WrongCombinationOfCardPointsException
     {
@@ -61,6 +61,10 @@ public class Player
 
     public List<Card> getCardsToDraw() {
 
+        if (cardsNotDrawn.isEmpty()) {
+            reuseRevealedCards();
+        }
+
         List<Card> cards = new ArrayList<>();
         Integer cardsToDrawNow = MAX_NUMBER_OF_CARDS_ON_HAND - this.cardsDrawn.size();
 
@@ -71,10 +75,22 @@ public class Player
         return cards;
     }
 
+    private void reuseRevealedCards() {
+        cardsNotDrawn = new ArrayList<Card>(cardsRevealed);
+        cardsRevealed.clear();
+        Collections.shuffle(cardsNotDrawn);
+    }
+
     public void drawOneCard(Card card)
     {
         cardsDrawn.add(card);
         cardsNotDrawn.remove(card);
+    }
+
+    public void revealOneCard(Card card)
+    {
+        cardsRevealed.add(card);
+        cardsDrawn.remove(card);
     }
 
     public boolean canReveal(Card card)

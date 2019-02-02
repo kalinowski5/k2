@@ -108,6 +108,7 @@ public class Game {
 
     @EventSourcingHandler
     public void on(CardRevealedEvent event) {
-
+        Player player = this.players.get(event.getCard().getPawnColor());
+        player.revealOneCard(event.getCard());
     }
 }
