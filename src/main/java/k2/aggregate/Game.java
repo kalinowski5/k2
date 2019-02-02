@@ -4,10 +4,7 @@ import k2.command.*;
 import k2.entity.Player;
 import k2.event.*;
 import k2.exception.*;
-import k2.valueobject.Card;
-import k2.valueobject.GameId;
-import k2.valueobject.PawnColor;
-import k2.valueobject.Space;
+import k2.valueobject.*;
 import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.commandhandling.model.AggregateIdentifier;
 import org.axonframework.commandhandling.model.AggregateLifecycle;
@@ -96,32 +93,27 @@ public class Game {
         gameId = event.getId();
         players = new HashMap<>();
 
-        Space spaceBaseCamp = new Space("Basecamp", 5000, 1, 1);
-        Space space1 = new Space("1", 5000, 1, 1);
-        Space space2 = new Space("2", 5000, 1, 1);
-        Space space3 = new Space("3", 5000, 1, 1);
-        Space space4 = new Space("4", 5000, 1, 1);
-        Space space5 = new Space("5", 5000, 1, 1);
-        Space space6 = new Space("6", 5000, 1, 1);
+        graph.addVertex(Space.K2_BASE_CAMP);
+        graph.addVertex(Space.S1);
+        graph.addVertex(Space.S2);
+        graph.addVertex(Space.S3);
+        graph.addVertex(Space.S4);
+        graph.addVertex(Space.S5);
+        graph.addVertex(Space.S6);
+        graph.addVertex(Space.K2_SUMMIT);
 
-        graph.addVertex(spaceBaseCamp);
-        graph.addVertex(space1);
-        graph.addVertex(space2);
-        graph.addVertex(space3);
-        graph.addVertex(space4);
-        graph.addVertex(space5);
-        graph.addVertex(space6);
-
-        graph.addEdge(spaceBaseCamp, space1);
-        graph.addEdge(space1, space2);
-        graph.addEdge(space2, space3);
-        graph.addEdge(space2, space4);
-        graph.addEdge(space3, space5);
-        graph.addEdge(space4, space5);
+        graph.addEdge(Space.K2_BASE_CAMP, Space.S1);
+        graph.addEdge(Space.S1, Space.S2);
+        graph.addEdge(Space.S2, Space.S3);
+        graph.addEdge(Space.S2, Space.S4);
+        graph.addEdge(Space.S3, Space.S5);
+        graph.addEdge(Space.S4, Space.S5);
+        graph.addEdge(Space.S5, Space.S6);
+        graph.addEdge(Space.S6, Space.K2_SUMMIT);
 
         DijkstraShortestPath<Space, DefaultEdge> dijkstraAlg = new DijkstraShortestPath<>(graph);
-        ShortestPathAlgorithm.SingleSourcePaths<Space, DefaultEdge> iPaths = dijkstraAlg.getPaths(spaceBaseCamp);
-        System.out.println(iPaths.getPath(space5) + "\n");
+        ShortestPathAlgorithm.SingleSourcePaths<Space, DefaultEdge> iPaths = dijkstraAlg.getPaths(Space.K2_BASE_CAMP);
+        System.out.println(iPaths.getPath(Space.K2_SUMMIT) + "\n");
 
     }
 

@@ -1,51 +1,33 @@
 package k2.valueobject;
 
-import java.util.Objects;
+public enum Space {
 
-public class Space {
-    final String id;
-    final Integer altitude;
-    final Integer level;
-    final Integer acclimatizationModifier;
-    final Integer costOfEntry;
+    K2_BASE_CAMP(5000, 1, 1),
+    S1(5000, 1, 1),
+    S2(5000, 1, 1),
+    S3(5000, 1, 1),
+    S4(5000, 1, 1),
+    S5(5000, 1, 1),
+    S6(5000, 1, 1),
+    K2_SUMMIT(8000, 10, -2, 3);
 
-    public Space(String id, Integer altitude, Integer level, Integer acclimatizationModifier) {
-        this.id = id;
+    private Integer altitude;
+    private Integer level;
+    private Integer acclimatizationModifier;
+    private Integer costOfEntry;
+
+    private Space(Integer altitude, Integer level, Integer acclimatizationModifier) {
         this.altitude = altitude;
         this.level = level;
         this.acclimatizationModifier = acclimatizationModifier;
         this.costOfEntry = 1;
     }
 
-    public Space(String id, Integer altitude, Integer level, Integer acclimatizationModifier, Integer costOfEntry) {
-        this.id = id;
+    private Space(Integer altitude, Integer level, Integer acclimatizationModifier, Integer costOfEntry) {
         this.altitude = altitude;
         this.level = level;
         this.acclimatizationModifier = acclimatizationModifier;
         this.costOfEntry = costOfEntry;
     }
 
-    public String getId() {
-        return id;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Space compareTo = (Space) o;
-
-        return Objects.equals(compareTo.getId(), this.getId());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
-
-    @Override
-    public String toString() {
-        return "Space " + id;
-    }
 }
