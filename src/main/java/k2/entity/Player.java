@@ -140,6 +140,11 @@ public class Player
         return canRevealCards;
     }
 
+    public boolean canAct()
+    {
+        return availableMovementPoints > 0; // OR acclimatization points > 0
+    }
+
     public boolean canReveal(Card card)
     {
         return cardsDrawn.contains(card);

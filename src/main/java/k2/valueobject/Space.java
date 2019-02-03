@@ -10,6 +10,7 @@ public enum Space {
     S5(5000, 1, 1),
     S6(5000, 1, 1),
     S7(5000, 1, 1),
+    S8(5000, 1, 1),
     SUMMIT(8000, 10, -2, 3);
 
     private Integer altitude;

@@ -125,6 +125,13 @@ public class Game {
         }
 
         AggregateLifecycle.apply(new ClimberMovedEvent(gameId, command.getPlayer(), currentPosition, command.getTargetSpace(), movementCost));
+
+        boolean allPlayersFinishedActions = players.entrySet().stream().noneMatch(map -> map.getValue().canAct());
+
+        if (allPlayersFinishedActions) {
+            AggregateLifecycle.apply(new PhaseStartedEvent(this.gameId, Phase.END_OF_TURN));
+            AggregateLifecycle.apply(new PhaseStartedEvent(this.gameId, Phase.CARD_SELECTION));
+        }
     }
 
     @CommandHandler
@@ -145,6 +152,7 @@ public class Game {
         graph.addVertex(Space.S5);
         graph.addVertex(Space.S6);
         graph.addVertex(Space.S7);
+        graph.addVertex(Space.S8);
         graph.addVertex(Space.SUMMIT);
 
         graph.addEdge(Space.BASE_CAMP, Space.S1);
@@ -156,6 +164,7 @@ public class Game {
         graph.addEdge(Space.S4, Space.S5);
         graph.addEdge(Space.S5, Space.S7);
         graph.addEdge(Space.S6, Space.S7);
+        graph.addEdge(Space.S7, Space.S8);
         //...
         graph.addEdge(Space.S7, Space.SUMMIT);
         graph.setEdgeWeight(Space.S7, Space.SUMMIT, Space.SUMMIT.getCostOfEntry());//@TODO: Use only when cost is gt 0
