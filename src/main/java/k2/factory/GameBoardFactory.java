@@ -2,8 +2,6 @@ package k2.factory;
 
 import k2.valueobject.Space;
 import org.jgrapht.Graph;
-import org.jgrapht.alg.interfaces.ShortestPathAlgorithm;
-import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
 import org.jgrapht.graph.DefaultDirectedWeightedGraph;
 import org.jgrapht.graph.DefaultWeightedEdge;
 
@@ -18,8 +16,6 @@ public class GameBoardFactory {
         addSpaces(board);
         connectSpaces(board);
         calculateEntryCosts(board);
-
-        //debugAndPlayground(board);//tmp
 
         return board;
     }
@@ -80,42 +76,4 @@ public class GameBoardFactory {
         //8000
         board.addEdge(Space.S26, Space.SUMMIT); board.addEdge(Space.SUMMIT, Space.S26);
     }
-
-//    private static void debugAndPlayground(Graph<Space, DefaultWeightedEdge> board) {
-//        //board.edgeSet().stream().forEach(edge -> System.out.println(edge));
-//        //board.vertexSet().stream().forEach(vertex ->  System.out.println(vertex));
-//        //EnumSet.allOf(Space.class).forEach(space -> System.out.println("FRom "+space+": "+ board.incomingEdgesOf(space)));
-//
-//        board.edgeSet().stream().forEach(edge -> System.out.println(edge + " weight = " + board.getEdgeWeight(edge)));
-//        System.out.println("");
-//        System.out.println("");
-//        System.out.println("");
-//        System.out.println("");
-//        System.out.println("");
-//
-//
-//        DijkstraShortestPath<Space, DefaultWeightedEdge> dijkstraAlg = new DijkstraShortestPath<>(board);
-//        ShortestPathAlgorithm.SingleSourcePaths<Space, DefaultWeightedEdge> iPaths = dijkstraAlg.getPaths(Space.BASE_CAMP);
-//
-//        Integer movementCost = (int) iPaths.getWeight(Space.SUMMIT);
-//        System.out.println("movementCost = " + movementCost);
-//        System.out.println("path = " + iPaths.getPath(Space.SUMMIT));
-//
-//        System.out.println("");
-//        System.out.println("");
-//        System.out.println("");
-//        System.out.println("");
-//        System.out.println("");
-//
-//        iPaths = dijkstraAlg.getPaths(Space.SUMMIT);
-//        Integer movementCostDown = (int) iPaths.getWeight(Space.BASE_CAMP);
-//        System.out.println("movementCost = " + movementCostDown);
-//        System.out.println("path = " + iPaths.getPath(Space.BASE_CAMP));
-//
-//        System.out.println("");
-//        System.out.println("");
-//        System.out.println("");
-//        System.out.println("");
-//        System.out.println("");
-//    }
 }
