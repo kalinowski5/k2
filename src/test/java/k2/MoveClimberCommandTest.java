@@ -215,7 +215,7 @@ public class MoveClimberCommandTest {
                 )
                 .when(new MoveClimberCommand(gameId, PawnColor.RED, Space.SUMMIT))
                 .expectException(NotEnoughMovementPointsException.class)
-                .expectExceptionMessage("You need 8 movement points for that move, but you have only 4 available.");
+                .expectExceptionMessage("You need 24 movement points for that move, but you have only 4 available.");
     }
 
 
