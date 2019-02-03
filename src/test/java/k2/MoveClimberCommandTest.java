@@ -37,6 +37,7 @@ public class MoveClimberCommandTest {
         fixture.given(
                     new BoardSetUpEvent(gameId),
                     new PlayerAddedEvent(gameId, "Reinhold Messner",  PawnColor.RED),
+                    new PlayerAddedEvent(gameId, "Reinhold Messner",  PawnColor.BLUE),
                     new GameStartedEvent(gameId),
                     new CardDrawnEvent(gameId, card1),
                     new CardDrawnEvent(gameId, card2),

@@ -1,10 +1,16 @@
 package k2.entity;
 
+import k2.event.CardDrawnEvent;
+import k2.event.CardRevealedEvent;
+import k2.event.ClimberMovedEvent;
+import k2.event.PassedEvent;
 import k2.exception.WrongCombinationOfCardPointsException;
 import k2.valueobject.Card;
 import k2.valueobject.PawnColor;
+import k2.valueobject.Phase;
 import k2.valueobject.Space;
 import org.axonframework.commandhandling.model.EntityId;
+import org.axonframework.eventsourcing.EventSourcingHandler;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -12,14 +18,16 @@ import java.util.List;
 
 public class Player
 {
-
     private static final int MAX_NUMBER_OF_CARDS_ON_HAND = 6;
+    private static final int NUMBER_OF_CARDS_TO_REVEAL_IN_ONE_TURN = 3;
 
-    @EntityId
+    @EntityId(routingKey = "player")
     private PawnColor color;
     private String name;
     private Space currentPosition = Space.BASE_CAMP;
     private Integer availableMovementPoints = 0;
+    private Boolean canDrawCards = true;
+    private Boolean canRevealCards = false;
 
     private List<Card> cardsNotDrawn = new ArrayList<>();
     private List<Card> cardsDrawn = new ArrayList<>();
@@ -84,22 +92,52 @@ public class Player
         Collections.shuffle(cardsNotDrawn);
     }
 
-    public void drawOneCard(Card card)
-    {
+    @EventSourcingHandler
+    public void on(CardDrawnEvent event) {
+        Card card = event.getCard();
         cardsDrawn.add(card);
         cardsNotDrawn.remove(card);
+        canRevealCards = true;
     }
 
-    public void revealOneCard(Card card)
-    {
+    @EventSourcingHandler
+    public void on(CardRevealedEvent event) {
+        Card card = event.getCard();
+        canDrawCards = false;
         cardsRevealed.add(card);
         cardsDrawn.remove(card);
         availableMovementPoints += card.getUpwardMovementPoints();
+
+        if (NUMBER_OF_CARDS_TO_REVEAL_IN_ONE_TURN == MAX_NUMBER_OF_CARDS_ON_HAND - cardsDrawn.size()) {
+            canRevealCards = false;
+        }
     }
 
-    public void moveTo(Space targetSpace, Integer pointsUsed) {
-        currentPosition = targetSpace;
-        availableMovementPoints -= pointsUsed;
+    @EventSourcingHandler
+    public void on(ClimberMovedEvent event) {
+        currentPosition = event.getTo();
+        availableMovementPoints -= event.getMovementPointsUsed();
+    }
+
+    @EventSourcingHandler
+    public void on(PassedEvent event) {
+        availableMovementPoints = 0;
+    }
+
+    public void onPhaseStarted(Phase phase) {
+        if (phase == Phase.CARD_SELECTION) {
+            canDrawCards = true;
+        }
+    }
+
+    public boolean canDrawCards()
+    {
+        return canDrawCards;
+    }
+
+    public boolean canRevealCards()
+    {
+        return canRevealCards;
     }
 
     public boolean canReveal(Card card)

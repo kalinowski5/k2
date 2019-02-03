@@ -3,11 +3,13 @@ package k2;
 import k2.aggregate.Game;
 import k2.command.DrawCardsCommand;
 import k2.event.*;
+import k2.exception.CantDrawCardsTwiceInTheSameTurnException;
 import k2.exception.GameNotStartedException;
 import k2.exception.WrongCombinationOfCardPointsException;
 import k2.valueobject.Card;
 import k2.valueobject.GameId;
 import k2.valueobject.PawnColor;
+import k2.valueobject.Phase;
 import org.axonframework.test.aggregate.AggregateTestFixture;
 import org.axonframework.test.aggregate.FixtureConfiguration;
 import org.junit.Before;
@@ -79,6 +81,30 @@ public class DrawCardsCommandTest {
                 )));
     }
 
+
+    @Test
+    public void drawCardsTwiceInTheSameTurn() throws WrongCombinationOfCardPointsException {
+        GameId gameId = new GameId("GAME_3");
+        Card card = new Card(PawnColor.BLUE, 2, 0, 0);
+        fixture.given(
+                new BoardSetUpEvent(gameId),
+                new PlayerAddedEvent(gameId, "John",  PawnColor.BLUE),
+                new GameStartedEvent(gameId),
+                new CardDrawnEvent(gameId, card),
+                new CardDrawnEvent(gameId, card),
+                new CardDrawnEvent(gameId, card),
+                new CardDrawnEvent(gameId, card),
+                new CardDrawnEvent(gameId, card),
+                new CardDrawnEvent(gameId, card),
+                new CardRevealedEvent(gameId, card),
+                new CardRevealedEvent(gameId, card),
+                new CardRevealedEvent(gameId, card)
+        )
+                .when(new DrawCardsCommand(gameId, PawnColor.BLUE))
+                .expectException(CantDrawCardsTwiceInTheSameTurnException.class);
+    }
+
+
     @Test
     public void reuseRevealedCardsAfterWholeDeckIsUsed() throws WrongCombinationOfCardPointsException {
         GameId gameId = new GameId("GAME_4");
@@ -122,6 +148,8 @@ public class DrawCardsCommandTest {
                     new CardRevealedEvent(gameId, card10),
                     new CardRevealedEvent(gameId, card2),
 
+                    //Phase changes omitted for brevity
+
                     new CardDrawnEvent(gameId, card5),
                     new CardDrawnEvent(gameId, card18),
                     new CardDrawnEvent(gameId, card9),
@@ -129,6 +157,8 @@ public class DrawCardsCommandTest {
                     new CardRevealedEvent(gameId, card4),
                     new CardRevealedEvent(gameId, card9),
                     new CardRevealedEvent(gameId, card3),
+
+                   //Phase changes omitted for brevity
 
                     new CardDrawnEvent(gameId, card17),
                     new CardDrawnEvent(gameId, card12),
@@ -138,6 +168,8 @@ public class DrawCardsCommandTest {
                     new CardRevealedEvent(gameId, card12),
                     new CardRevealedEvent(gameId, card8),
 
+                    //Phase changes omitted for brevity
+
                     new CardDrawnEvent(gameId, card13),
                     new CardDrawnEvent(gameId, card14),
                     new CardDrawnEvent(gameId, card6),
@@ -146,13 +178,17 @@ public class DrawCardsCommandTest {
                     new CardRevealedEvent(gameId, card14),
                     new CardRevealedEvent(gameId, card6),
 
+                    //Phase changes omitted for brevity
+
                     new CardDrawnEvent(gameId, card7),
                     new CardDrawnEvent(gameId, card15),
                     new CardDrawnEvent(gameId, card16),
 
                     new CardRevealedEvent(gameId, card7),
                     new CardRevealedEvent(gameId, card15),
-                    new CardRevealedEvent(gameId, card16)
+                    new CardRevealedEvent(gameId, card16),
+
+                    new PhaseStartedEvent(gameId, Phase.CARD_SELECTION)
 
                 )
                 .when(new DrawCardsCommand(gameId, PawnColor.BLUE))

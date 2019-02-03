@@ -4,11 +4,13 @@ import k2.aggregate.Game;
 import k2.command.StartGameCommand;
 import k2.event.BoardSetUpEvent;
 import k2.event.GameStartedEvent;
+import k2.event.PhaseStartedEvent;
 import k2.event.PlayerAddedEvent;
 import k2.exception.GameAlreadyStartedException;
 import k2.exception.NotEnoughPlayersException;
 import k2.valueobject.GameId;
 import k2.valueobject.PawnColor;
+import k2.valueobject.Phase;
 import org.axonframework.test.aggregate.AggregateTestFixture;
 import org.axonframework.test.aggregate.FixtureConfiguration;
 import org.junit.Before;
@@ -33,7 +35,10 @@ public class StartGameCommandTest {
                 )
                 .when(new StartGameCommand(gameId))
                 .expectSuccessfulHandlerExecution()
-                .expectEvents(new GameStartedEvent(gameId));
+                .expectEvents(
+                        new GameStartedEvent(gameId),
+                        new PhaseStartedEvent(gameId, Phase.CARD_SELECTION)
+                );
     }
 
     @Test

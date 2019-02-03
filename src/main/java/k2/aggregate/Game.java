@@ -9,6 +9,7 @@ import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.commandhandling.model.AggregateIdentifier;
 import org.axonframework.commandhandling.model.AggregateLifecycle;
 import org.axonframework.commandhandling.model.AggregateMember;
+import org.axonframework.commandhandling.model.ForwardMatchingInstances;
 import org.axonframework.eventsourcing.EventSourcingHandler;
 import org.axonframework.spring.stereotype.Aggregate;
 import org.jgrapht.Graph;
@@ -25,7 +26,7 @@ public class Game {
     @AggregateIdentifier
     private GameId gameId;
 
-    @AggregateMember
+    @AggregateMember(eventForwardingMode = ForwardMatchingInstances.class)
     private Map<PawnColor, Player> players;
 
     Graph<Space, DefaultWeightedEdge> graph = new DefaultDirectedWeightedGraph<>(DefaultWeightedEdge.class); //@TODO: Change to undirected?
@@ -33,6 +34,7 @@ public class Game {
     private boolean gameStarted = false;
 
     private Phase phase = Phase.CARD_SELECTION;
+    private Integer turn = 1;
 
     private Game() {
     }
@@ -69,14 +71,21 @@ public class Game {
         }
 
         AggregateLifecycle.apply(new GameStartedEvent(gameId));
+        AggregateLifecycle.apply(new PhaseStartedEvent(gameId, Phase.CARD_SELECTION));
     }
 
     @CommandHandler
-    public void drawCards(DrawCardsCommand command) throws GameNotStartedException, WrongCombinationOfCardPointsException {
+    public void drawCards(DrawCardsCommand command) throws GameNotStartedException, CantDrawCardsTwiceInTheSameTurnException {
+
         if (!this.gameStarted) {
             throw new GameNotStartedException();
         }
+
         Player player = this.players.get(command.getPlayer());
+
+        if (!player.canDrawCards()) {
+            throw new CantDrawCardsTwiceInTheSameTurnException();
+        }
         player.getCardsToDraw().iterator().forEachRemaining(
                 card -> AggregateLifecycle.apply(new CardDrawnEvent(this.gameId, card))
         );
@@ -92,6 +101,12 @@ public class Game {
         }
 
         AggregateLifecycle.apply(new CardRevealedEvent(this.gameId, command.getCard()));
+
+        boolean allPlayersRevealedCards = players.entrySet().stream().noneMatch(map -> map.getValue().canRevealCards());
+
+        if (allPlayersRevealedCards) {
+            AggregateLifecycle.apply(new PhaseStartedEvent(this.gameId, Phase.ACTION));
+        }
     }
 
     @CommandHandler
@@ -110,10 +125,11 @@ public class Game {
         }
 
         AggregateLifecycle.apply(new ClimberMovedEvent(gameId, command.getPlayer(), currentPosition, command.getTargetSpace(), movementCost));
+    }
 
-        if (command.getTargetSpace() == Space.SUMMIT) {
-            System.out.println("TAAADAAAM! You reached the K2 summit!");
-        }
+    @CommandHandler
+    public void pass(PassCommand command) {
+        AggregateLifecycle.apply(new PassedEvent(gameId, command.getPlayer()));
     }
 
     @EventSourcingHandler
@@ -143,8 +159,6 @@ public class Game {
         //...
         graph.addEdge(Space.S7, Space.SUMMIT);
         graph.setEdgeWeight(Space.S7, Space.SUMMIT, Space.SUMMIT.getCostOfEntry());//@TODO: Use only when cost is gt 0
-
-
     }
 
     @EventSourcingHandler
@@ -158,20 +172,8 @@ public class Game {
     }
 
     @EventSourcingHandler
-    public void on(CardDrawnEvent event) {
-        Player player = this.players.get(event.getCard().getPawnColor());
-        player.drawOneCard(event.getCard());
-    }
-
-    @EventSourcingHandler
-    public void on(CardRevealedEvent event) {
-        Player player = this.players.get(event.getCard().getPawnColor());
-        player.revealOneCard(event.getCard());
-    }
-
-    @EventSourcingHandler
-    public void on(ClimberMovedEvent event) {
-        Player player = this.players.get(event.getPlayer());
-        player.moveTo(event.getTo(), event.getMovementPointsUsed());
+    public void on(PhaseStartedEvent event) {
+        phase = event.getPhase();
+        players.entrySet().stream().forEach(map -> map.getValue().onPhaseStarted(event.getPhase()));
     }
 }
