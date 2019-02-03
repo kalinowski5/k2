@@ -126,17 +126,23 @@ public class Game {
 
         AggregateLifecycle.apply(new ClimberMovedEvent(gameId, command.getPlayer(), currentPosition, command.getTargetSpace(), movementCost));
 
+        finishActionPhase();
+    }
+
+    @CommandHandler
+    public void pass(PassCommand command) {
+        AggregateLifecycle.apply(new PassedEvent(gameId, command.getPlayer()));
+
+        finishActionPhase();
+    }
+
+    private void finishActionPhase() {
         boolean allPlayersFinishedActions = players.entrySet().stream().noneMatch(map -> map.getValue().canAct());
 
         if (allPlayersFinishedActions) {
             AggregateLifecycle.apply(new PhaseStartedEvent(this.gameId, Phase.END_OF_TURN));
             AggregateLifecycle.apply(new PhaseStartedEvent(this.gameId, Phase.CARD_SELECTION));
         }
-    }
-
-    @CommandHandler
-    public void pass(PassCommand command) {
-        AggregateLifecycle.apply(new PassedEvent(gameId, command.getPlayer()));
     }
 
     @EventSourcingHandler
