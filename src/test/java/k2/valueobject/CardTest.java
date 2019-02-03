@@ -24,6 +24,12 @@ public class CardTest {
         Assert.assertSame(CardType.ACCLIMATIZATION, card.getType());
     }
 
+    @Test
+    public void cardTypeEmptyAcclimatization() throws WrongCombinationOfCardPointsException  {
+        Card card = new Card(PawnColor.RED, 0, 0, 0);
+        Assert.assertSame(CardType.ACCLIMATIZATION, card.getType());
+    }
+
     @Test(expected = WrongCombinationOfCardPointsException.class)
     public void wrongCombinationOfPoints() throws WrongCombinationOfCardPointsException  {
         new Card(PawnColor.RED, 1, 0, 3);

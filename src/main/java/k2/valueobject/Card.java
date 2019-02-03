@@ -33,11 +33,7 @@ public class Card {
             return CardType.MOVEMENT;
         }
 
-        if (this.acclimatizationPoints > 0) {
-            return CardType.ACCLIMATIZATION;
-        }
-
-        return CardType.RESCUE;
+        return CardType.ACCLIMATIZATION;
     }
 
     public PawnColor getPawnColor() {
