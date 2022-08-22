@@ -2,8 +2,8 @@ plugins {
     id 'java'
     id 'pmd'
     id 'application'
-    id "org.springframework.boot" version "2.1.2.RELEASE"
-    id "io.spring.dependency-management" version "1.0.6.RELEASE"
+    id "org.springframework.boot" version "2.2.13.RELEASE"
+    id "io.spring.dependency-management" version "1.0.11.RELEASE"
 }
 
 application {
@@ -20,8 +20,8 @@ repositories {
 
 
 dependencies {
-    compile("org.springframework.boot:spring-boot-starter-web")
-    compile("org.springframework.boot:spring-boot-starter-data-jpa")
+    compile('org.springframework.boot:spring-boot-starter-web:2.2.13.RELEASE')
+    compile('org.springframework.boot:spring-boot-starter-data-jpa:2.2.13.RELEASE')
     compile group: 'org.axonframework', name: 'axon-spring-boot-starter', version: '3.3.7'
     compile group: 'mysql', name: 'mysql-connector-java', version: '8.0.11'
     compile "joda-time:joda-time:2.10"
