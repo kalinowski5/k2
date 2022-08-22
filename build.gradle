@@ -7,8 +7,6 @@ plugins {
 }
 
 application {
-    //mainClassName = 'org.miasta.k2'
-    //mainClassName = 'Controller'
     mainClassName = 'k2.HelloWorld'
 }
 
